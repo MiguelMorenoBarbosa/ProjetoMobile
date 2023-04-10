@@ -8,13 +8,12 @@ import {styles} from "./styles";
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
 import { ComponentButtonInterface } from '../../components'
-import  { LoginTypes } from "../../navigations/login.navigation"
 
-export function Login({ navigation }: LoginTypes) {
+export function Cadastro() {
     return(
         <View style={styles.container}>
             <KeyboardAvoidingView>
-                <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>Cadastro</Text>
                 <View style={styles.formRow}>
                     <MaterialIcons name="email" style={styles.icon} />
                     <TextInput
@@ -35,7 +34,7 @@ export function Login({ navigation }: LoginTypes) {
                     />
                 </View>
                 <ComponentButtonInterface title="Login" type="primary" onPressI={() => { console.log('Login') }} />
-                <ComponentButtonInterface title="Cadastre-se" type="primary" onPressI={() => { console.log('Cadastro') }} />
+                <ComponentButtonInterface title="Cadastre-se" type="primary" onPressI={() => { console.navigate('Cadastro') }} />
             </KeyboardAvoidingView>
         </View>
     )
