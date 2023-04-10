@@ -14,12 +14,12 @@ export function Slider1({ setPageI }: IPage) {
     ]
     return (
         <ImageBackground source={slide1} style={styles.container} >
-            <View style={styles.panel}>
-                <ComponentTitleSlider titleI='Pesquisa de carros' />
-                <FlatList 
+           <View style={styles.panel}>
+                <ComponentTitleSlider titleI='Estante' />
+                <FlatList
                     data={slide1Texts}
-                    renderItem={({ item }) => 
-                        <ComponentListMarker key={item.id} textMarker={item.text} />
+                    renderItem={({ item }) =>
+                       <ComponentListMarker key={item.id} textMarker={item.text} />
                     }
                     keyExtractor={(item) => item.id}
                 />
@@ -29,6 +29,7 @@ export function Slider1({ setPageI }: IPage) {
                 <ComponentButtonSlider onPressI={() => setPageI(2)} page={false}/>
                 <ComponentButtonSlider onPressI={() => setPageI(3)} page={false}/>
                 <ComponentButtonSlider onPressI={() => setPageI(4)} page={false}/>
+                <ComponentButtonSlider onPressI={() => setPageI(5)} page={false}/>
             </View>
         </ImageBackground>
     );
