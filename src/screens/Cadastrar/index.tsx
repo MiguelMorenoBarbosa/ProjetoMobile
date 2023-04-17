@@ -1,40 +1,50 @@
 import React from 'react';
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { 
     View, KeyboardAvoidingView, Text,
     TextInput
 } from "react-native";
 import {styles} from "./styles";
-import { Entypo, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { colors } from '../../styles/colors';
-import { ComponentButtonInterface } from '../../components'
+import {ComponentButtonInterface} from '../../components';
+import { LoginTypes } from '../../navigations/login.navigation';
 
-export function Cadastro() {
+export function Cadastrar({ navigation }: LoginTypes) {
     return(
         <View style={styles.container}>
             <KeyboardAvoidingView>
-                <Text style={styles.title}>Cadastro</Text>
+                <Text style={styles.title}>Cadastre-se</Text>
+                <View style={styles.formRow}>
+                    <AntDesign name="user" style={styles.icon} />
+                    <TextInput
+                        placeholder="Nome"
+                        placeholderTextColor={colors.thirdLight}
+                        autoCapitalize="none"
+                        style={styles.input}
+                    />
+                </View>
                 <View style={styles.formRow}>
                     <MaterialIcons name="email" style={styles.icon} />
                     <TextInput
                         placeholder="Email"
-                        placeholderTextColor={colors.primary}
+                        placeholderTextColor={colors.thirdLight}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         style={styles.input}
                     />
                 </View>
                 <View style={styles.formRow}>
-                    <FontAwesome5 name="key" size={24} color="black" style={styles.icon} />
+                    <FontAwesome5 name="key" style={styles.icon} />
                     <TextInput
                         placeholder="Senha"
-                        placeholderTextColor={colors.primary}
+                        placeholderTextColor={colors.thirdLight}
                         secureTextEntry={true}
                         autoCapitalize="none"
+                        style={styles.input}
                     />
                 </View>
-                <ComponentButtonInterface title="Login" type="primary" onPressI={() => { console.log('Login') }} />
-                <ComponentButtonInterface title="Cadastre-se" type="primary" onPressI={() => { console.navigate('Cadastro') }} />
+                <ComponentButtonInterface title="Entrar" type="primary" onPressI={() => { console.log('Salvar') }} />
+                <ComponentButtonInterface title="Voltar" type="primary" onPressI={() => { navigation.navigate('Login') }} />
             </KeyboardAvoidingView>
         </View>
     )

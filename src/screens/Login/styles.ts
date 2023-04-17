@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: "center",
-        color: colors.fourth
+        color: colors.black
     },
     formRow: {
         borderWidth: 1,

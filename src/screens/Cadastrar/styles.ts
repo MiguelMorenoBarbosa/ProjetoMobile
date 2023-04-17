@@ -1,24 +1,24 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../styles/colors';
 export const styles = StyleSheet.create({
-    container: {
+    container:{
         flex: 1,
         alignItems: "center",
         justifyContent: "center"
     },
     title: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        textAlign: "center",
-        color: colors.fourth
+      fontSize: 30,
+      fontWeight: "bold",
+      textAlign: "center",
+      color: colors.black
     },
     formRow: {
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderRadius: 5,
+        margin: 10,
         flexDirection: "row",
         alignItems: "center",
-        margin: 10
+        borderWidth: 1,
+        borderColor: colors.primary,
+        borderRadius: 5
     },
     icon: {
         fontSize: 28,
@@ -30,4 +30,5 @@ export const styles = StyleSheet.create({
         padding: 10,
         width: "70%"
     }
+
 })
