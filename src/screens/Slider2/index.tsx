@@ -13,7 +13,7 @@ export function Slider2({ setPageI }: IPage) {
     return (
         <ImageBackground source={slide1} style={styles.container} >
            <View style={styles.panel}>
-                <ComponentTitleSlider titleI='Fale Conosco' />
+                <ComponentTitleSlider titleI='Contatos' />
                 <FlatList
                     data={slide1Texts}
                     renderItem={({ item }) =>
