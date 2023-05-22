@@ -1,10 +1,14 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { colors } from "../../styles/colors";
+import { color } from 'react-native-reanimated';
+import { colors } from "./../../styles/colors";
 
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
+      backgroundColor: colors.primary
+    },
+    container2: {
+      alignItems: 'center'
     },
     camera: {
       flex: 1,
@@ -38,6 +42,7 @@ export const styles = StyleSheet.create({
       marginRight: 5
     },
     botao3: {
+      width: "15%",
       alignItems: "flex-end",
       flexDirection: "row",
       justifyContent: "flex-start",
@@ -47,7 +52,6 @@ export const styles = StyleSheet.create({
     lado: {
       flexDirection: "row",
       alignItems: "center",
-      marginTop: 50
     },
     seta: {
       flexDirection: "row",
