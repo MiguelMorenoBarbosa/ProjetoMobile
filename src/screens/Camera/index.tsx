@@ -1,39 +1,58 @@
+import { Camera, CameraCapturedPicture, CameraType,FaceDetectionResult } from 'expo-camera';
+import { useRef, useState } from 'react';
+import { Button, Alert, Text, Image, View } from 'react-native';
+import { ComponentButtonInterface } from '../../components';
+import {styles} from './styles'
 import * as MediaLibrary from 'expo-media-library'
 import * as ImagePicker from 'expo-image-picker'
-import { Camera, CameraCapturedPicture, CameraType } from 'expo-camera';
-import { useState, useRef } from 'react';
-import { Button, Text, TouchableOpacity, View, Image, Alert } from 'react-native';
-import { styles } from "./styles"
-import { MaterialCommunityIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';
-import { colors } from '../../styles/colors';
-import { LoginTypes } from '../../navigations/login.navigation';
-
-
-interface IPhoto {
-  height: string
-  uri: string
-  width: string
+import * as FaceDetector from 'expo-face-detector';
+import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import React from 'react';
+interface IPhoto{
+    height: string
+    uri: string
+    widht: string
 }
 
-export function CameraScreen({navigation}: LoginTypes) {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [permissionMedia, requestPermissionMedia] = MediaLibrary.usePermissions();
-  const [photo, setPhoto] = useState<CameraCapturedPicture | ImagePicker.ImagePickerAsset>()
-  const ref = useRef<Camera>(null)
-  const [takePhoto, setTakePhoto] = useState(false)
 
-  if (!permission) {
-    // As permissões da câmera estão sendo carregadas
-    return <View />
+export  function CameraScreen() {
+  const [type, setType] = useState(CameraType.back);
+  const [permissionCamera, requestPermissionCamera] = Camera.useCameraPermissions();
+  const [permissionMedia, requestPermissionMedia] = MediaLibrary.usePermissions();
+  const [photo,setphoto] = useState<CameraCapturedPicture | ImagePicker.ImagePickerAsset>()
+  const ref = useRef<Camera>(null)
+  const [takePhoto, setTakePhoto] = useState(false);
+  const [permissionQrCode, requestPermissionQr] = BarCodeScanner.usePermissions();
+  const [scanned, setScanned] = useState(false)
+  const [face,setFace] = useState<FaceDetector.FaceFeature>()
+
+
+  if (!permissionCamera) {
+    // Camera permissions are still loading
+    return <View />;
   }
 
-  if (!permission.granted) {
-    // A permissão da câmera ainda não foi dada
+  if (!permissionCamera.granted) {
+    // Camera permissions are not granted yet
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>Permita o acesso à sua câmera!!</Text>
-        <Button onPress={requestPermission} title="Pemissão do Uso da Câmera" />
+        <Text style={{ textAlign: 'center' }}>Preciso de permissão para acessar a camera</Text>
+        <Button onPress={requestPermissionCamera} title="garanta a permissão" />
+      </View>
+    );
+  }
+  if (!permissionMedia) {
+    // Camera permissions are still loading
+    return <View />;
+  }
+
+  if (!permissionMedia.granted) {
+    // Camera permissions are not granted yet
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>Preciso de permissão para acessar a galeria</Text>
+        <Button onPress={requestPermissionMedia} title="garanta a permissão" />
       </View>
     );
   }
@@ -43,53 +62,85 @@ export function CameraScreen({navigation}: LoginTypes) {
   }
 
   async function takePicture() {
-    if (ref.current) {
-      const picture = await ref.current.takePictureAsync()
-      console.log(picture)
-      setPhoto(picture)
+    if(ref.current){
+        const picture = await ref.current.takePictureAsync()
+        setphoto(picture)
+        setTakePhoto(false)
     }
+    
+   }
+  async function savePhoto(){
+    const asset = await MediaLibrary.createAssetAsync(photo!.uri)
+    MediaLibrary.createAlbumAsync("Images", asset, false)
+    Alert.alert("Imagem salva com sucesso")
   }
 
-  async function SavePhoto() {
-    const asset = await MediaLibrary.createAssetAsync(photo!.uri)
-    MediaLibrary.createAlbumAsync("Imagens", asset, true)
-    Alert.alert("Imagem salva com sucesso!")
+  async function pickImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing:true,
+      aspect: [4,3],
+      quality: 1
+    })
+    if (!result.canceled) {
+      setphoto(result.assets[0])
+    }
   }
+  const handleBarCodeScanned = ({type,data}: BarCodeScannerResult) =>{
+    setScanned(true);
+    alert(data);
+  }
+  const resetQrCode = () => {
+    setScanned(false);
+  }
+
+  const handleFacesDetected = ({faces}: FaceDetectionResult): void =>{
+    if (faces.length > 0){
+      const faceDetect = faces[0] as FaceDetector.FaceFeature
+      setFace(faceDetect)
+      // console.log(faceDetect)
+    } else {
+      setFace(undefined)
+
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {photo && photo.uri ? (
-        <>
-          <View style={styles.camera2}>
-            <View>
-              <View style={styles.lado}>
-                <TouchableOpacity onPress={() => {navigation.navigate('Photo')}} style={styles.botao3}>
-                  <Ionicons name="caret-back-circle" size={40} color={colors.secondary} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={SavePhoto} style={styles.botao3} /*Para salvar */>
-                  <MaterialIcons name="save" size={40} color={colors.secondary} />
-                </TouchableOpacity>
-              </View>
-              <Image source={{ uri: photo.uri }} style={styles.img} />
-              </View>
+      {takePhoto ?(
+      <>
+          <ComponentButtonInterface title='Virar' type='primary' onPressI={toggleCameraType}/>
+          <Camera style={styles.camera} type={type} ref={ref} ratio='1:1'
+           onBarCodeScanned={scanned ? undefined: handleBarCodeScanned}
+           onFacesDetected={handleFacesDetected}
+           faceDetectorSettings={{
+            mode:FaceDetector.FaceDetectorMode.accurate,
+            detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
+            runClassifications: FaceDetector.FaceDetectorClassifications.all,
+            minDetectionInterval: 1000,
+            tracking: true,
+           }}/>
+           
+          <ComponentButtonInterface title=' Tirar Foto' type='primary' onPressI={takePicture}/>
+          <ComponentButtonInterface title='Qr Code' type='primary' onPressI={resetQrCode}/> 
+          <View>
+                    {face && face.smilingProbability && face.smilingProbability > 0.1 ? (
+                        <Text>Sorrindo</Text>
+                    ) : (
+                        <Text>Não está sorrindo</Text>
+                    )}
           </View>
         </>
-      ) : (
-        <Camera style={styles.camera} type={type} ref={ref}>
-          <View style={styles.lado}>
-            <TouchableOpacity onPress={() => navigation.navigate('Photo')} style={styles.botao3} /*Para voltar para o tab */>
-                <Ionicons name="caret-back-circle" size={40} color={colors.white} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={takePicture} style={styles.botao1} /* Para tirar  a foto */>
-              <MaterialIcons name="camera" size={100} color={colors.white} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleCameraType} style={styles.botao2} /* Para mudar a câmera */>
-              <MaterialCommunityIcons name="camera-flip" size={70} color={colors.white} />
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      )}
-
+      ):(
+        <>
+        <ComponentButtonInterface title=' Tirar Foto' type='primary' onPressI={()=>setTakePhoto(true)}/>
+        <ComponentButtonInterface title='Salvar' type='primary' onPressI={savePhoto}/>
+        <ComponentButtonInterface title='Abrir imagem' type='primary' onPressI={pickImage}/>
+        {photo && photo.uri && (
+           <Image source={{uri: photo!.uri}} style={styles.img} />
+        )}
+        </>
+        )
+     }
     </View>
   );
 }
