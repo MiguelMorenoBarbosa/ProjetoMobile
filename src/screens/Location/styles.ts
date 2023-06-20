@@ -1,6 +1,6 @@
+import { Dimensions, StyleSheet } from 'react-native';
+import { colors } from '../../styles/colors';
 
-import { Dimensions, StyleSheet } from "react-native"
-import { colors } from "../../styles/colors";
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -13,8 +13,8 @@ export const styles = StyleSheet.create({
       textAlign: 'center',
     },
     map: {
-        width: Dimensions.get("window"). width,
-        height: Dimensions.get("window"). height
+      width: Dimensions.get("window").width,
+      height: Dimensions.get("window").height
     },
     searchContainer: {
       position: 'absolute',
@@ -26,7 +26,6 @@ export const styles = StyleSheet.create({
       height: 56,
       borderRadius: 7,
       borderWidth: 2,
-      borderColor: colors.third,
+      borderColor: colors.third
     }
   });
-  
