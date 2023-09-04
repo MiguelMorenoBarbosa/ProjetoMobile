@@ -1,5 +1,5 @@
-import React from 'react';
-import LottieView from 'lottie-react-native'
+import React from "react"
+import  LottieView from "lottie-react-native"
 import loading from "../../lotties/loading.json"
 
 export function Loading(){
