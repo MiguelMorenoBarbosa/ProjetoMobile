@@ -5,9 +5,11 @@ import { TabTypes } from "../../navigations/tab.navigation";
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from "../../services/data/Push";
 import { useAuth} from "../../hooks/auth";
-import { useEffect, useState } from "react";
-import { ComponentLoading } from "../../components";
-import React from "react";
+import { ComponentLoading, ComponentButtonInterface } from "../../components";
+import React, { useCallback, useEffect, useState } from "react";
+import { IUserLogin } from "../../services/data/User";
+import { api } from "../../services/api";
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({ 
         shouldShowAlert: true,
@@ -16,11 +18,10 @@ Notifications.setNotificationHandler({
     }),
 });
 export function Perfil({ navigation }: TabTypes) {
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
-    function handleVoltar() {
-        const login = navigation.getParent()
-        login?.goBack()
+    async function handleVoltar() {
+        await signOut()
     }   
     useEffect(() => {
         if (user) {
@@ -42,7 +43,7 @@ export function Perfil({ navigation }: TabTypes) {
                 <View style={styles.container}>
                     <Text>Perfil</Text>
                     <TouchableOpacity onPress={handleVoltar}>
-                        <Text>Voltar</Text>
+                        <Text>LogOut</Text>
                     </TouchableOpacity>
                 </View>
             )}
