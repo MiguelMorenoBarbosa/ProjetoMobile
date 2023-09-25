@@ -6,6 +6,7 @@ import {
 
 import {Navigation} from "./src/navigations"
 import { AuthProvider } from './src/contexts/auth';
+import React from 'react';
 
 export interface IPage {
   setPageI: Dispatch<SetStateAction<number>>
